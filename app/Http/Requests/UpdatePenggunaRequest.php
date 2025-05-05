@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePenggunaRequest extends FormRequest
+class UpdatePenggunaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,21 +24,15 @@ class StorePenggunaRequest extends FormRequest
         return [
             //
             "name" => "required|string|max:100",
-            "email" => "required|email|unique:penggunas",
-            "password" => "required|min:6|confirmed",
             "phone" => "nullable|digits_between:10,13",
-
         ];
     }
+
     public function messages(): array
     {
         return [
             "name.required" => "Nama tidak boleh kosong",
-            "email.required" => "Email tidak boleh kosong",
-            "email.unique" => "Email sudah ada",
-            "password.required" => "Password tidak boleh kosong",
-            "password.min" => "Password tidak boleh kurang dari 6 karakter",
-            "password.confirmed" => "Konfirmasi Password Tidak Cocok",
+            "phone.digits_between" =>"No hp 10-13 Digit!",
         ];
     }
 }
