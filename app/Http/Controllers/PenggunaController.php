@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePenggunaRequest;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PenggunaController extends Controller
 {
@@ -30,22 +32,28 @@ class PenggunaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePenggunaRequest $request)
     {
         //cara 1
-        $request->validate([
-            "name"=> "required|string|max:100",
-            "email"=> "required|email|unique:penggunas",
-            "password"=> "required|min:6|confirmed",
-            "phone"=> "nullable|digits_between:10,13",
-        ]);
-        Pengguna::create([
-            'name'=> $request->name,
-            'email'=> $request->email,
-            'password'=> $request->password,
-            'phone'=> $request->phone,
-        ]);
+        // $request->validate([
+        //     "name"=> "required|string|max:100",
+        //     "email"=> "required|email|unique:penggunas",
+        //     "password"=> "required|min:6|confirmed",
+        //     "phone"=> "nullable|digits_between:10,13",
+        // ]);
+        // Pengguna::create([
+        //     'name'=> $request->name,
+        //     'email'=> $request->email,
+        //     'password'=> Hash::make($request->password),
+        //     'phone'=> $request->phone,
+        // ]);
+
+        $data = $request->validated();
+        $data['password']= Hash::make($data['password']);
+        Pengguna::create($data);
+
         return redirect()->route('penggunas.create')->with('success','Pengguna berhasil ditambahkan!');
+    
     }
 
     /**
