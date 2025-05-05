@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PenggunaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dosen\DosenController;
 use App\Http\Controllers\dosen\DosenpnpController;
@@ -297,4 +298,9 @@ Route::get('force-delete',[DosenController::class,'forceDelete']);
 
 Route::get('mahasiswapnp',[MahasiswaController::class,'selectView']);
 
-
+Route::get('pengguna/create', [PenggunaController::class,'create'])->name('penggunas.create');   
+Route::post('pengguna', [PenggunaController::class,'store'])->name('penggunas.store');   
+Route::get('pengguna', [PenggunaController::class,'index'])->name('penggunas.index');   
+Route::get('pengguna/{id}/edit', [PenggunaController::class,'edit'])->name('penggunas.edit');   
+Route::put('pengguna/{id}', [PenggunaController::class,'update'])->name('penggunas.update');   
+Route::delete('pengguna/{id}', [PenggunaController::class,'destroy'])->name('penggunas.destroy');   
