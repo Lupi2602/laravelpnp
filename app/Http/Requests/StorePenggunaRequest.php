@@ -27,6 +27,7 @@ class StorePenggunaRequest extends FormRequest
             "email" => "required|email|unique:penggunas",
             "password" => "required|min:6|confirmed",
             "phone" => "nullable|digits_between:10,13",
+            "file_upload" => "required|file|mimes:pdf,jpg,jpeg,png|max:2048",
 
         ];
     }
@@ -37,6 +38,7 @@ class StorePenggunaRequest extends FormRequest
             "email.required" => "Email tidak boleh kosong",
             "email.unique" => "Email sudah ada",
             "password.required" => "Password tidak boleh kosong",
+            "file_upload.required" => "File upload tidak boleh kosong",
             "password.min" => "Password tidak boleh kurang dari 6 karakter",
             "password.confirmed" => "Konfirmasi Password Tidak Cocok",
         ];

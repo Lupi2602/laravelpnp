@@ -304,3 +304,5 @@ Route::get('pengguna', [PenggunaController::class,'index'])->name('penggunas.ind
 Route::get('pengguna/{id}/edit', [PenggunaController::class,'edit'])->name('penggunas.edit');   
 Route::put('pengguna/{id}', [PenggunaController::class,'update'])->name('penggunas.update');   
 Route::delete('pengguna/{id}', [PenggunaController::class,'destroy'])->name('penggunas.destroy');   
+
+
