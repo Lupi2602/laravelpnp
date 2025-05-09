@@ -97,9 +97,9 @@ class PenggunaController extends Controller
 
         $pengguna = Pengguna::findOrFail($id);
         $data = $request->validated();
-        if ($request->$request->hasFile('file_upload')) {
+        if ($request->hasFile('file_upload')) {
             //hapus file sebelumnya
-            if ($pengguna->file_upload && Storage::disk('public')->exists($pengguna->file_upload)); {
+            if ($pengguna->file_upload && Storage::disk('public')->exists($pengguna->file_upload)) {
                 Storage::disk('public')->delete($pengguna->file_upload);
             }
         }
@@ -107,7 +107,7 @@ class PenggunaController extends Controller
         $filename = time() . '.' . $file->getClientOriginalName();
         $path = $file->storeAs('uploads', $filename, 'public');
         $data['file_upload'] = $path;
-        
+
         // $pengguna->update([
         //     'name'=> $request->name,
         //     'phone'=> $request->phone,
