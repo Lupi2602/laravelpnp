@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePenggunaRequest;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class PenggunaController extends Controller
 {
@@ -50,18 +51,18 @@ class PenggunaController extends Controller
         // ]);
 
         $data = $request->validated();
-        $data['password']= Hash::make($data['password']);
-        
+        $data['password'] = Hash::make($data['password']);
+
         if ($request->hasFile('file_upload')) {
             $file = $request->file('file_upload');
-            $filename = time() .'.'. $file->getClientOriginalName();
-            $path = $file->storeAs('uploads', $filename,'public');
+            $filename = time() . '.' . $file->getClientOriginalName();
+            $path = $file->storeAs('uploads', $filename, 'public');
             $data['file_upload'] = $path;
         }
         Pengguna::create($data);
 
-        return redirect()->route('penggunas.index')->with('success','Pengguna berhasil ditambahkan!');
-    
+        return redirect()->route('penggunas.index')->with('success', 'Pengguna berhasil ditambahkan!');
+
     }
 
     /**
@@ -78,9 +79,9 @@ class PenggunaController extends Controller
     public function edit(string $id)
     {
         //
-        $pengguna = Pengguna::findOrFail( $id );
+        $pengguna = Pengguna::findOrFail($id);
         return view('penggunas.edit', compact('pengguna'));
-        
+
     }
 
     /**
@@ -94,17 +95,28 @@ class PenggunaController extends Controller
         //     "phone"=> "nullable|digits_between:10,13",
         // ]);
 
-        $pengguna = Pengguna::findOrFail( $id );
+        $pengguna = Pengguna::findOrFail($id);
         $data = $request->validated();
+        if ($request->$request->hasFile('file_upload')) {
+            //hapus file sebelumnya
+            if ($pengguna->file_upload && Storage::disk('public')->exists($pengguna->file_upload)); {
+                Storage::disk('public')->delete($pengguna->file_upload);
+            }
+        }
+        $file = $request->file('file_upload');
+        $filename = time() . '.' . $file->getClientOriginalName();
+        $path = $file->storeAs('uploads', $filename, 'public');
+        $data['file_upload'] = $path;
+        
         // $pengguna->update([
         //     'name'=> $request->name,
         //     'phone'=> $request->phone,
         // ]);
 
         $pengguna->update($data);
-        return redirect()->route('penggunas.index')->with('success','Data Berhasil diupdate');
+        return redirect()->route('penggunas.index')->with('success', 'Data Berhasil diupdate');
     }
-  
+
 
     /**
      * Remove the specified resource from storage.
