@@ -121,8 +121,13 @@ class PenggunaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $pengguna = Pengguna::findOrFail($id);
+        $pengguna->delete();
+
+
+        return redirect()->route('penggunas.index')->with('success', 'Pengguna berhasil dihapus.');
     }
+
 }

@@ -58,6 +58,11 @@ Route::delete('delete/{id}', function ($id) {
     return 'delete data for id:' . $id;
 });
 
+// Route::get('/profile', function () {
+//     echo '<h1>Profile</h1>';
+//     return '<p> Jurusan teknologi informasi-Politeknik Negeri Padang</p>';
+// });
+
 
 //route with parameter
 Route::get('mahasiswa/{nama}', function ($nama) {
