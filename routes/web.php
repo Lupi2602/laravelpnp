@@ -1,17 +1,30 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenggunaController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dosen\DosenController;
 use App\Http\Controllers\dosen\DosenpnpController;
 use App\Http\Controllers\dosen\DosentiController;
 use App\Http\Controllers\TeknisiController;
 
-//default routing
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::resource('penggunas', PenggunaController::class);
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
 
 Route::get('/mahasiswa', [MahasiswaController::class, 'index']);
 
@@ -45,19 +58,6 @@ Route::delete('delete/{id}', function ($id) {
     return 'delete data for id:' . $id;
 });
 
-
-
-Route::get('/profile', function () {
-    echo '<h1>Profile</h1>';
-    return '<p> Jurusan teknologi informasi-Politeknik Negeri Padang</p>';
-});
-
-Route::get('mahasiswa/ti/latifa', function () {
-    echo "<p style='font-size:40;color:orange'>Jurusan Teknologi Informasi";
-    echo "<h1> Selamat Datang Latifa...</h1>";
-    echo "<hr>";
-    echo "<p> lorem .........................</p>";
-});
 
 //route with parameter
 Route::get('mahasiswa/{nama}', function ($nama) {
@@ -298,11 +298,9 @@ Route::get('force-delete',[DosenController::class,'forceDelete']);
 
 Route::get('mahasiswapnp',[MahasiswaController::class,'selectView']);
 
-Route::get('pengguna/create', [PenggunaController::class,'create'])->name('penggunas.create');   
-Route::post('pengguna', [PenggunaController::class,'store'])->name('penggunas.store');   
-Route::get('pengguna', [PenggunaController::class,'index'])->name('penggunas.index');   
-Route::get('pengguna/{id}/edit', [PenggunaController::class,'edit'])->name('penggunas.edit');   
-Route::put('pengguna/{id}', [PenggunaController::class,'update'])->name('penggunas.update');   
-Route::delete('pengguna/{id}', [PenggunaController::class,'destroy'])->name('penggunas.destroy');   
-
-
+// Route::get('pengguna/create', [PenggunaController::class,'create'])->name('penggunas.create');   
+// Route::post('pengguna', [PenggunaController::class,'store'])->name('penggunas.store');   
+// Route::get('pengguna', [PenggunaController::class,'index'])->name('penggunas.index');   
+// Route::get('pengguna/{id}/edit', [PenggunaController::class,'edit'])->name('penggunas.edit');   
+// Route::put('pengguna/{id}', [PenggunaController::class,'update'])->name('penggunas.update');   
+// Route::delete('pengguna/{id}', [PenggunaController::class,'destroy'])->name('penggunas.destroy');   
