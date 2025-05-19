@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
@@ -13,18 +14,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::resource('penggunas', PenggunaController::class);
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+    Route::middleware('auth')->group(function () {
+    });
 
-require __DIR__.'/auth.php';
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::prefix('profile')->group(function () {
+            Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        });
+
+        Route::middleware(['auth', 'admin'])->group(function () {
+            Route::resource('penggunas', PenggunaController::class);
+        });
+    });
+
+require __DIR__ . '/auth.php';
 
 Route::get('/mahasiswa', [MahasiswaController::class, 'index']);
 
@@ -175,7 +186,7 @@ Route::get("nilaimhswhile", function () {
 Route::get("nilaimhsforeach", function () {
     $nama = "reykel";
     $nim = "20240343334";
-    $total_nilai = [20,30,50,80];
+    $total_nilai = [20, 30, 50, 80];
 
     return view("akademik.nilaimahasiswaforeach", compact(
         "nama",
@@ -188,7 +199,7 @@ Route::get("nilaimhsforeach", function () {
 Route::get("nilaimhsforeach", function () {
     $nama = "reykel";
     $nim = "20240343334";
-    $total_nilai = [20,30,56,80];
+    $total_nilai = [20, 30, 56, 80];
 
     return view("akademik.nilaimahasiswaforelse", compact(
         "nama",
@@ -201,7 +212,7 @@ Route::get("nilaimhsforeach", function () {
 Route::get("nilaimhsforeach", function () {
     $nama = "reykel";
     $nim = "20240343334";
-    $total_nilai = [20,30,56,80];
+    $total_nilai = [20, 30, 56, 80];
 
     return view("akademik.nilaimahasiswacontinue", compact(
         "nama",
@@ -214,7 +225,7 @@ Route::get("nilaimhsforeach", function () {
 Route::get("nilaimhsbreak", function () {
     $nama = "reykel";
     $nim = "20240343334";
-    $total_nilai = [100,80,20,30,56,80];
+    $total_nilai = [100, 80, 20, 30, 56, 80];
 
     return view("akademik.nilaimahasiswabreak", compact(
         "nama",
@@ -224,84 +235,92 @@ Route::get("nilaimhsbreak", function () {
 });
 //mahasiswa
 Route::get('/mahasiswati', function () {
-   $arrMhs =['naufal','reykel','atika','dika','gilang','rafi'];
-    return view('akademik.mahasiswapnp',['mhs'=> $arrMhs]);
-})->name(name: 'mahasiswati');;
+    $arrMhs = ['naufal', 'reykel', 'atika', 'dika', 'gilang', 'rafi'];
+    return view('akademik.mahasiswapnp', ['mhs' => $arrMhs]);
+})->name(name: 'mahasiswati');
+;
 
 //dosen
 Route::get('/dosenti', action: function () {
-    $arrDsn =['dosen web framework','dosen microservices','dosen mobile programming'
-    ,'dosen web programming','dosen multimedia','dosen IOT'];
-     return view('akademik.dosenpnp',['dsn'=> $arrDsn]);
- })->name('dosenti');
+    $arrDsn = [
+        'dosen web framework',
+        'dosen microservices',
+        'dosen mobile programming'
+        ,
+        'dosen web programming',
+        'dosen multimedia',
+        'dosen IOT'
+    ];
+    return view('akademik.dosenpnp', ['dsn' => $arrDsn]);
+})->name('dosenti');
 
- //prodi
-Route::get('/pnp/{jurusan}/{prodi}', action: function ($jurusan,$prodi) {
-    $data=[$jurusan,$prodi];
-    return view('akademik.prodipnp')->with('data',$data);
- })->name('prodi');
+//prodi
+Route::get('/pnp/{jurusan}/{prodi}', action: function ($jurusan, $prodi) {
+    $data = [$jurusan, $prodi];
+    return view('akademik.prodipnp')->with('data', $data);
+})->name('prodi');
 
-Route::get('dosen',[DosenController::class,'index']);
+Route::get('dosen', [DosenController::class, 'index']);
 
-Route::get('teknisi',[TeknisiController::class,'index']);
-Route::get('teknisi/create',[TeknisiController::class,'create']);
-Route::get('teknisi/{id}',[TeknisiController::class,'show']);
+Route::get('teknisi', [TeknisiController::class, 'index']);
+Route::get('teknisi/create', [TeknisiController::class, 'create']);
+Route::get('teknisi/{id}', [TeknisiController::class, 'show']);
 
-Route::post('teknisi',[TeknisiController::class,'store']);
-Route::get('teknisi/{id}/edit',[TeknisiController::class,'edit']);
-Route::put('teknisi/{id}',[TeknisiController::class,'update']);
-Route::delete('teknisi/{id}',[TeknisiController::class,'destroy']);
+Route::post('teknisi', [TeknisiController::class, 'store']);
+Route::get('teknisi/{id}/edit', [TeknisiController::class, 'edit']);
+Route::put('teknisi/{id}', [TeknisiController::class, 'update']);
+Route::delete('teknisi/{id}', [TeknisiController::class, 'destroy']);
 
-Route::get('insert-sql',[MahasiswaController::class,'insertSql']);
-Route::get('insert-prepared',[MahasiswaController::class,'insertPrepared']);
-Route::get('insert-binding',[MahasiswaController::class,'insertBinding']);
-Route::get('update',[MahasiswaController::class,'update']);
-Route::get('delete',[MahasiswaController::class,'delete']);
-Route::get('select',[MahasiswaController::class,'select']);
-Route::get('select-tampil',[MahasiswaController::class,'selectTampil']);
-Route::get('select-view',[MahasiswaController::class,'selectView']);
-Route::get('select-where',[MahasiswaController::class,'selectWhere']);
-Route::get('statement',[MahasiswaController::class,'statement']);
+Route::get('insert-sql', [MahasiswaController::class, 'insertSql']);
+Route::get('insert-prepared', [MahasiswaController::class, 'insertPrepared']);
+Route::get('insert-binding', [MahasiswaController::class, 'insertBinding']);
+Route::get('update', [MahasiswaController::class, 'update']);
+Route::get('delete', [MahasiswaController::class, 'delete']);
+Route::get('select', [MahasiswaController::class, 'select']);
+Route::get('select-tampil', [MahasiswaController::class, 'selectTampil']);
+Route::get('select-view', [MahasiswaController::class, 'selectView']);
+Route::get('select-where', [MahasiswaController::class, 'selectWhere']);
+Route::get('statement', [MahasiswaController::class, 'statement']);
 //Query Builder
-Route::get('dosen',[DosenpnpController::class,'index'])->name('dosens.index');
-Route::get('dosen/create',[DosenpnpController::class,'create'])->name('dosens.create');
-Route::post('dosen',[DosenpnpController::class,'store'])->name('dosens.store');
-Route::get('dosen/{id}/edit',[DosenpnpController::class,'edit'])->name('dosens.edit');
-Route::put('dosen/{id}',[DosenpnpController::class,'update'])->name('dosens.update');
-Route::delete('dosen/{id}',[DosenpnpController::class,'destroy'])->name('dosens.destroy');
+Route::get('dosen', [DosenpnpController::class, 'index'])->name('dosens.index');
+Route::get('dosen/create', [DosenpnpController::class, 'create'])->name('dosens.create');
+Route::post('dosen', [DosenpnpController::class, 'store'])->name('dosens.store');
+Route::get('dosen/{id}/edit', [DosenpnpController::class, 'edit'])->name('dosens.edit');
+Route::put('dosen/{id}', [DosenpnpController::class, 'update'])->name('dosens.update');
+Route::delete('dosen/{id}', [DosenpnpController::class, 'destroy'])->name('dosens.destroy');
 //Eloquent ORM
-Route::get('dosenti',[DosentiController::class,'index'])->name('dosensti.index');
-Route::get('dosenti/create',[DosentiController::class,'create'])->name('dosensti.create');
-Route::post('dosenti',[DosentiController::class,'store'])->name('dosensti.store');
-Route::get('dosenti/{id}/edit',[DosentiController::class,'edit'])->name('dosensti.edit');
-Route::put('dosenti/{id}',[DosentiController::class,'update'])->name('dosensti.update');
-Route::delete('dosenti/{id}',[DosentiController::class,'destroy'])->name('dosensti.destroy');
+Route::get('dosenti', [DosentiController::class, 'index'])->name('dosensti.index');
+Route::get('dosenti/create', [DosentiController::class, 'create'])->name('dosensti.create');
+Route::post('dosenti', [DosentiController::class, 'store'])->name('dosensti.store');
+Route::get('dosenti/{id}/edit', [DosentiController::class, 'edit'])->name('dosensti.edit');
+Route::put('dosenti/{id}', [DosentiController::class, 'update'])->name('dosensti.update');
+Route::delete('dosenti/{id}', [DosentiController::class, 'destroy'])->name('dosensti.destroy');
 
 
-Route::get('cek-objek',[DosenController::class,'cekObjek']);
-Route::get('insert',[DosenController::class,'insert']);
-Route::get('mass-assignment',[DosenController::class,'massAssignment']);
-Route::get('updatedosen',[DosenController::class,'update']);
-Route::get('updatedosen-where',[DosenController::class,'updateWhere']);
-Route::get('mass-update',[DosenController::class,'massUpdate']);
-Route::get('deletedosen',[DosenController::class,'delete']);
-Route::get('destroydosen',[DosenController::class,'destroy']);
-Route::get('mass-delete',[DosenController::class,'massDelete']);
-Route::get('all',[DosenController::class,'all']);
-Route::get('all-view',[DosenController::class,'allView']);
-Route::get('get-where',[DosenController::class,'getWhere']);
-Route::get('test-where',[DosenController::class,'testWhere']);
-Route::get('first',[DosenController::class,'first']);
-Route::get('find',[DosenController::class,'find']);
-Route::get('latest',[DosenController::class,'latest']);
-Route::get('limit',[DosenController::class,'limit']);
-Route::get('skip-take',[DosenController::class,'skipTake']);
-Route::get('soft-delete',[DosenController::class,'softDelete']);
-Route::get('with-trashed',[DosenController::class,'withTrashed']);
-Route::get('restore',[DosenController::class,'restore']);
-Route::get('force-delete',[DosenController::class,'forceDelete']);
+Route::get('cek-objek', [DosenController::class, 'cekObjek']);
+Route::get('insert', [DosenController::class, 'insert']);
+Route::get('mass-assignment', [DosenController::class, 'massAssignment']);
+Route::get('updatedosen', [DosenController::class, 'update']);
+Route::get('updatedosen-where', [DosenController::class, 'updateWhere']);
+Route::get('mass-update', [DosenController::class, 'massUpdate']);
+Route::get('deletedosen', [DosenController::class, 'delete']);
+Route::get('destroydosen', [DosenController::class, 'destroy']);
+Route::get('mass-delete', [DosenController::class, 'massDelete']);
+Route::get('all', [DosenController::class, 'all']);
+Route::get('all-view', [DosenController::class, 'allView']);
+Route::get('get-where', [DosenController::class, 'getWhere']);
+Route::get('test-where', [DosenController::class, 'testWhere']);
+Route::get('first', [DosenController::class, 'first']);
+Route::get('find', [DosenController::class, 'find']);
+Route::get('latest', [DosenController::class, 'latest']);
+Route::get('limit', [DosenController::class, 'limit']);
+Route::get('skip-take', [DosenController::class, 'skipTake']);
+Route::get('soft-delete', [DosenController::class, 'softDelete']);
+Route::get('with-trashed', [DosenController::class, 'withTrashed']);
+Route::get('restore', [DosenController::class, 'restore']);
+Route::get('force-delete', [DosenController::class, 'forceDelete']);
 
-Route::get('mahasiswapnp',[MahasiswaController::class,'selectView']);
+Route::get('mahasiswapnp', [MahasiswaController::class, 'selectView']);
 
 // Route::get('pengguna/create', [PenggunaController::class,'create'])->name('penggunas.create');   
 // Route::post('pengguna', [PenggunaController::class,'store'])->name('penggunas.store');   
@@ -309,3 +328,4 @@ Route::get('mahasiswapnp',[MahasiswaController::class,'selectView']);
 // Route::get('pengguna/{id}/edit', [PenggunaController::class,'edit'])->name('penggunas.edit');   
 // Route::put('pengguna/{id}', [PenggunaController::class,'update'])->name('penggunas.update');   
 // Route::delete('pengguna/{id}', [PenggunaController::class,'destroy'])->name('penggunas.destroy');   
+
