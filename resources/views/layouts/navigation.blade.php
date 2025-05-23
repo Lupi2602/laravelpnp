@@ -15,14 +15,20 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    
+
                     {{-- tambahkan if auth untuk menghilangkan pengguna pada dashboard user --}}
                     @if (auth()->user()->role === 'admin')
-                    <x-nav-link :href="route('penggunas.index')" :active="request()->routeIs('penggunas.*')">
-                        {{ __('Pengguna') }}
-                    </x-nav-link>
+                        <x-nav-link :href="route('penggunas.index')" :active="request()->routeIs('penggunas.*')">
+                            {{ __('Pengguna') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('books.index')" :active="request()->routeIs('book.*')">
+                            {{ __('Books') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.*')">
+                            {{ __('Sales') }}
+                        </x-nav-link>
                     @endif
-                    
+
                 </div>
             </div>
 
