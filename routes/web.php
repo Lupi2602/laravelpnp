@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenggunaController;
@@ -43,9 +44,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/laporan/penerbitan/pdf', [ReportController::class, 'exportPenerbitanPdf'])->name('laporan.penerbitan.pdf');
         Route::get('/laporan/penjualan/pdf', [ReportController::class, 'exportPenjualanPdf'])->name('laporan.penjualan.pdf');
 
-
         Route::get('/laporan/penerbitan/excel', [ReportController::class, 'exportPenerbitanExcel'])->name('laporan.penerbitan.excel');
         Route::get('/laporan/penjualan/excel', [ReportController::class, 'exportPenjualanExcel'])->name('laporan.penjualan.excel');
+        Route::get('todos',[TodoController::class,'index'])->name('todos.index');
+        Route::post('todos',[TodoController::class,'store'])->name('todos.store');
+        Route::put('todos/{id}',[TodoController::class,'update'])->name('todos.update');
+        Route::delete('todos/{id}',[TodoController::class,'destroy'])->name('todos.destroy');
     });
 });
 
